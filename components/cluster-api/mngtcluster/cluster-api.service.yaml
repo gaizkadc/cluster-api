@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cluster-api
+  labels:
+    cluster: management
+    component: cluster-api
+  namespace: nalej
+spec:
+  selector:
+    cluster: management
+    component: cluster-api
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    name: grpc
+    port: 8280
+    targetPort: 8280

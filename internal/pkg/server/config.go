@@ -15,6 +15,10 @@ import (
 type Config struct {
 	// Port where the gRPC API service will listen requests.
 	Port int
+	// NetworkManagerAddress with the Network Manager address.
+	NetworkManagerAddress string
+	// ConductorAddress with the Conductor Address.
+	ConductorAddress string
 	// AuthSecret contains the shared authx secret.
 	AuthSecret string
 	// AuthHeader contains the name of the target header.
@@ -27,6 +31,14 @@ func (conf *Config) Validate() derrors.Error {
 
 	if conf.Port <= 0 {
 		return derrors.NewInvalidArgumentError("ports must be valid")
+	}
+
+	if conf.NetworkManagerAddress == "" {
+		return derrors.NewInvalidArgumentError("networkManagerAddress must be set")
+	}
+
+	if conf.ConductorAddress == "" {
+		return derrors.NewInvalidArgumentError("conductorAddress must be set")
 	}
 
 	if conf.AuthHeader == "" || conf.AuthSecret == "" {
@@ -48,6 +60,8 @@ func (conf *Config) LoadAuthConfig() (*interceptor.AuthorizationConfig, derrors.
 func (conf *Config) Print() {
 	log.Info().Str("app", version.AppVersion).Str("commit", version.Commit).Msg("Version")
 	log.Info().Int("port", conf.Port).Msg("gRPC port")
+	log.Info().Str("URL", conf.NetworkManagerAddress).Msg("Network Manager Service")
+	log.Info().Str("URL", conf.ConductorAddress).Msg("Conductor Service")
 	log.Info().Str("header", conf.AuthHeader).Str("secret", strings.Repeat("*", len(conf.AuthSecret))).Msg("Authorization")
 	log.Info().Str("path", conf.AuthConfigPath).Msg("Permissions file")
 }

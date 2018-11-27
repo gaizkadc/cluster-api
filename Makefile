@@ -95,7 +95,7 @@ local:
 linux:
 	$(info >>> Bulding for Linux...)
 	for app in $(APPS); do \
-		if [ -d $(TARGET)/"$$app" ]; then \
+		if [ -d ./cmd/"$$app" ]; then \
     		CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GOBUILD) $(LDFLAGS) -o $(TARGET)/linux_amd64/"$$app" ./cmd/"$$app" ; \
 		fi ; \
 	done

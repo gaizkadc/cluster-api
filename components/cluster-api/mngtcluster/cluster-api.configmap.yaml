@@ -11,6 +11,9 @@ data:
   authx-config.json: |
     {"allows_all":false,
      "permissions": {
-       "/cluster_api.Clusters/Ops":{"must":["APPCLUSTEROPS"]}
+       "/cluster_api.Conductor/UpdateDeploymentFragmentStatus":{"must":["APPCLUSTEROPS"]},
+       "/cluster_api.Conductor/UpdateServiceStatus":{"must":["APPCLUSTEROPS"]},
+       "/cluster_api.NetworkManager/AuthorizeMember":{"must":["APPCLUSTEROPS"]},
+       "/cluster_api.NetworkManager/AddDNSEntry":{"must":["APPCLUSTEROPS"]}
      }
     }

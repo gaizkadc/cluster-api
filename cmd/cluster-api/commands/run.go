@@ -2,8 +2,6 @@
  * Copyright (C) 2018 Nalej - All Rights Reserved
  */
 
-// This is an example of an executable command.
-
 package commands
 
 import (
@@ -16,8 +14,8 @@ var config = server.Config{}
 
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Print a hello message",
-	Long:  `A long description about what is a hello message`,
+	Short: "Run Cluster API",
+	Long:  `Run Cluster API`,
 	Run: func(cmd *cobra.Command, args []string) {
 		SetupLogging()
 		log.Info().Msg("Launching API!")
@@ -28,6 +26,10 @@ var runCmd = &cobra.Command{
 
 func init() {
 	runCmd.Flags().IntVar(&config.Port, "port", 8280, "Port to launch the Public gRPC API")
+	runCmd.PersistentFlags().StringVar(&config.NetworkManagerAddress, "networkManagerAddress", "localhost:8000",
+		"Network Manager address (host:port)")
+	runCmd.PersistentFlags().StringVar(&config.ConductorAddress, "conductorAddress", "localhost:5000",
+		"Conductor address (host:port)")
 	runCmd.PersistentFlags().StringVar(&config.AuthHeader, "authHeader", "", "Authorization Header")
 	runCmd.PersistentFlags().StringVar(&config.AuthSecret, "authSecret", "", "Authorization secret")
 	runCmd.PersistentFlags().StringVar(&config.AuthConfigPath, "authConfigPath", "", "Authorization config path")

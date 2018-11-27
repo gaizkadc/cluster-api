@@ -56,14 +56,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:64253279a5d40e2df4fdf371d221a6864a26da3c2cfaa35677befe36c7e866bb"
+  digest = "1:208f1d8e504afb7b54685ecd13e0f09653374cf79b6601f28f03db3f236bea83"
   name = "github.com/nalej/authx"
   packages = [
     "pkg/interceptor",
     "pkg/token",
   ]
   pruneopts = ""
-  revision = "1f66f8da5176dc5e6dbfdd5227e13e0e59a0c0ff"
+  revision = "5265dfb1828065a61e49440cbef78538dd2c6e26"
 
 [[projects]]
   digest = "1:0cc441f3dfe124dd74f44dd7e466dfc17cc7edff468094fbc3847a96b5ebf6f7"
@@ -74,36 +74,76 @@
   version = "v2.0.0"
 
 [[projects]]
-  digest = "1:0826248ce462419e9144445b9cd1dcf7abebbea7f3b5a4a4169efb9bc914f927"
+  digest = "1:5f5003a334118937ede032f1551b4f0d0ac25f0dd437db47d16f8b45b4cface4"
+  name = "github.com/nalej/grpc-application-go"
+  packages = ["."]
+  pruneopts = ""
+  revision = "e5847ecb92b4fd8adc4531ac15ef239ecc055a0f"
+  version = "v0.0.25"
+
+[[projects]]
+  digest = "1:bc6a56ace9424f979cfaa2821155c8974477b64ddaeb7f16631faea10e46576d"
   name = "github.com/nalej/grpc-authx-go"
   packages = ["."]
   pruneopts = ""
-  revision = "0b55296344d780ef5aa88943c987734d89f5bef6"
-  version = "v0.0.16"
+  revision = "60d9088f1b70ed57ccf4d12721edd79629e80d51"
+  version = "v0.0.20"
 
 [[projects]]
-  digest = "1:2f7f06dac05e3a41d08b7f5352afabc6877679063693766295e4258de98a24e2"
+  digest = "1:9fa4d592e08797114ffd31196bdc5f585e89cc2042b52f1027b52f4bc0cf58e2"
+  name = "github.com/nalej/grpc-cluster-api-go"
+  packages = ["."]
+  pruneopts = ""
+  revision = "d2b08ff410edafde3d68d1a8171e85ce296b2742"
+  version = "v0.0.1"
+
+[[projects]]
+  digest = "1:d614538bf1dcf204730a404f702cd460f508898ac76eb21b95748585e164d39c"
   name = "github.com/nalej/grpc-common-go"
   packages = ["."]
   pruneopts = ""
-  revision = "ead753cd5351dbbcda85920554c43c9246e7a05d"
-  version = "v0.0.14"
+  revision = "f7f225abff8c521a65dfcd4883dc56d5cd45777a"
+  version = "v0.0.17"
 
 [[projects]]
-  digest = "1:f4bfa23b796d4e198867a4bac14e97d46627896a1a59ccc2c3658e3a5b3f0a1c"
+  digest = "1:e431cc16789dae0c1557d7d8dc5b20e6e4c48cc0f7133e9e3666b8da62b4dc76"
+  name = "github.com/nalej/grpc-conductor-go"
+  packages = ["."]
+  pruneopts = ""
+  revision = "060feadda41a495c0fbf2be04b9b552b3273914e"
+  version = "v0.0.58"
+
+[[projects]]
+  digest = "1:2fcc9847d47db07c9031a1bc47f1eece58a0282185717d2b49ac57ea3565f2ba"
+  name = "github.com/nalej/grpc-infrastructure-go"
+  packages = ["."]
+  pruneopts = ""
+  revision = "dd7cb6e6b0bafbe699ed23d27aba43a899fb4467"
+  version = "v0.0.18"
+
+[[projects]]
+  digest = "1:5775eb1a9d5443055c9324f921abcdb76670f12dc0dccd02e8ff0fca9f938c8a"
+  name = "github.com/nalej/grpc-network-go"
+  packages = ["."]
+  pruneopts = ""
+  revision = "07de66d86667ee6e02862f8a88d953a604a5e1cc"
+  version = "v0.0.16"
+
+[[projects]]
+  digest = "1:e06bbf71924f47b4da338af2cb433f3b3a1d2c751a484abfd7ca08f833a6f83a"
   name = "github.com/nalej/grpc-organization-go"
   packages = ["."]
   pruneopts = ""
-  revision = "6f35ea7d2c53b1ec0545ee69d5cab22e652f746d"
-  version = "v0.0.13"
+  revision = "e284ae182c532cfb82f54ee980a81f773576334c"
+  version = "v0.0.16"
 
 [[projects]]
-  digest = "1:bb09d8cb53d9d7fbb7ea3d8cfc205b0c9dbe7c655522de67078f771e33044b8e"
+  digest = "1:86581d90fb9543eb0a80a5ab566b5a110f194dc8fb0111072ca2d294f70eae86"
   name = "github.com/nalej/grpc-user-go"
   packages = ["."]
   pruneopts = ""
-  revision = "ad027f1dd0905ee9c25fa2d7246fefc90df6c36c"
-  version = "v0.0.11"
+  revision = "319e8ebea2d9277ad259b81b3dc5ba90fe5d3552"
+  version = "v0.0.14"
 
 [[projects]]
   digest = "1:05c1a54c80e2d88b6af8f6e3af68ded6ef7f5aea9a28873fb68edc72ea798581"
@@ -339,6 +379,10 @@
     "github.com/nalej/authx/pkg/token",
     "github.com/nalej/derrors",
     "github.com/nalej/grpc-authx-go",
+    "github.com/nalej/grpc-cluster-api-go",
+    "github.com/nalej/grpc-common-go",
+    "github.com/nalej/grpc-conductor-go",
+    "github.com/nalej/grpc-network-go",
     "github.com/nalej/grpc-utils/pkg/test",
     "github.com/nalej/grpc-utils/pkg/tools",
     "github.com/onsi/ginkgo",

@@ -44,6 +44,8 @@ spec:
         args:
         - "run"
         - "--debug"
+        - "--networkManagerAddress=network-manager.nalej:8000"
+        - "--conductorAddress=conductor.nalej:5000"
         - "--authHeader=authorization"
         - "--authSecret=$(AUTH_SECRET)"
         - "--authConfigPath=/nalej/config/authx-config.json"

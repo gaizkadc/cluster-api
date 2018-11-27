@@ -2,7 +2,7 @@
  * Copyright (C) 2018 Nalej - All Rights Reserved
  */
 
-package cluster
+package conductor
 
 import (
 	"github.com/onsi/ginkgo"
@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestClusterPackage(t *testing.T) {
+func TestConductorPackage(t *testing.T) {
 	gomega.RegisterFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "Cluster package suite")
+	ginkgo.RunSpecs(t, "Conductor package suite")
 }

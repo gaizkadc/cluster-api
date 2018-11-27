@@ -6,7 +6,7 @@
 RUN_INTEGRATION_TEST=true
 */
 
-package cluster
+package conductor
 
 import (
 	"github.com/nalej/authx/pkg/interceptor"

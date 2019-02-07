@@ -9,7 +9,7 @@ metadata:
     cluster: management
     component: cluster-api
   name: cluster-api
-  namespace: nalej
+  namespace: __NPH_NAMESPACE
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -29,7 +29,8 @@ spec:
           name: cluster-api-authx-config
       containers:
       - name: cluster-api
-        image: nalejregistry.azurecr.io/nalej/cluster-api:VERSION
+        image: __NPH_REGISTRY.azurecr.io/__NPH_REGISTRY_NAMESPACE/cluster-api:__NPH_VERSION
+        imagePullPolicy: Always
         env:
         - name: AUTH_SECRET
           valueFrom:
@@ -40,12 +41,11 @@ spec:
         - name: authx-config
           mountPath: "/nalej/config"
           readOnly: true
-        imagePullPolicy: Always
         args:
         - "run"
         - "--debug"
-        - "--networkManagerAddress=network-manager.nalej:8000"
-        - "--conductorAddress=conductor.nalej:5000"
+        - "--networkManagerAddress=network-manager.__NPH_NAMESPACE:8000"
+        - "--conductorAddress=conductor.__NPH_NAMESPACE:5000"
         - "--authHeader=authorization"
         - "--authSecret=$(AUTH_SECRET)"
         - "--authConfigPath=/nalej/config/authx-config.json"

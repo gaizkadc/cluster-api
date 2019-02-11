@@ -14,6 +14,7 @@ data:
        "/cluster_api.Conductor/UpdateDeploymentFragmentStatus":{"must":["APPCLUSTEROPS"]},
        "/cluster_api.Conductor/UpdateServiceStatus":{"must":["APPCLUSTEROPS"]},
        "/cluster_api.NetworkManager/AuthorizeMember":{"must":["APPCLUSTEROPS"]},
-       "/cluster_api.NetworkManager/AddDNSEntry":{"must":["APPCLUSTEROPS"]}
+       "/cluster_api.NetworkManager/AddDNSEntry":{"must":["APPCLUSTEROPS"]},
+       "/cluster_api.DeviceManager/RegisterLatency":{"must":["APPCLUSTEROPS"]}
      }
     }

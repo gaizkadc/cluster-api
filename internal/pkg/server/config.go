@@ -19,6 +19,8 @@ type Config struct {
 	NetworkManagerAddress string
 	// ConductorAddress with the Conductor Address.
 	ConductorAddress string
+	// DeviceManagerAddress with the Device Manager address
+	DeviceManagerAddress string
 	// AuthSecret contains the shared authx secret.
 	AuthSecret string
 	// AuthHeader contains the name of the target header.
@@ -39,6 +41,10 @@ func (conf *Config) Validate() derrors.Error {
 
 	if conf.ConductorAddress == "" {
 		return derrors.NewInvalidArgumentError("conductorAddress must be set")
+	}
+
+	if conf.DeviceManagerAddress == "" {
+		return derrors.NewInvalidArgumentError("deviceManagerAddress must be set")
 	}
 
 	if conf.AuthHeader == "" || conf.AuthSecret == "" {
@@ -62,6 +68,7 @@ func (conf *Config) Print() {
 	log.Info().Int("port", conf.Port).Msg("gRPC port")
 	log.Info().Str("URL", conf.NetworkManagerAddress).Msg("Network Manager Service")
 	log.Info().Str("URL", conf.ConductorAddress).Msg("Conductor Service")
+	log.Info().Str("URL", conf.DeviceManagerAddress).Msg("Device Manager Service")
 	log.Info().Str("header", conf.AuthHeader).Str("secret", strings.Repeat("*", len(conf.AuthSecret))).Msg("Authorization")
 	log.Info().Str("path", conf.AuthConfigPath).Msg("Permissions file")
 }

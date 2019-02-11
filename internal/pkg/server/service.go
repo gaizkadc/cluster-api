@@ -8,10 +8,12 @@ import (
 	"fmt"
 	"github.com/nalej/authx/pkg/interceptor"
 	"github.com/nalej/cluster-api/internal/pkg/server/conductor"
+	"github.com/nalej/cluster-api/internal/pkg/server/device_latency"
 	"github.com/nalej/cluster-api/internal/pkg/server/network"
 	"github.com/nalej/derrors"
 	"github.com/nalej/grpc-cluster-api-go"
 	"github.com/nalej/grpc-conductor-go"
+	"github.com/nalej/grpc-device-manager-go"
 	"github.com/nalej/grpc-network-go"
 	"github.com/nalej/grpc-utils/pkg/tools"
 	"github.com/rs/zerolog/log"
@@ -39,6 +41,7 @@ type Clients struct {
 	NetworkManager grpc_network_go.NetworksClient
 	DNSClient      grpc_network_go.DNSClient
 	Conductor      grpc_conductor_go.ConductorMonitorClient
+	DeviceLatency  grpc_device_manager_go.LatencyClient
 }
 
 // GetClients creates the required connections with the remote clients.
@@ -51,10 +54,15 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 	if err != nil {
 		return nil, derrors.AsError(err, "cannot create connection with conductor")
 	}
+	dConn, err := grpc.Dial(s.Configuration.DeviceManagerAddress, grpc.WithInsecure())
+	if err != nil {
+		return nil, derrors.AsError(err, "cannot create connection with device manager")
+	}
 	nClient := grpc_network_go.NewNetworksClient(nmConn)
 	dnsClient := grpc_network_go.NewDNSClient(nmConn)
 	cClient := grpc_conductor_go.NewConductorMonitorClient(cConn)
-	return &Clients{nClient, dnsClient, cClient}, nil
+	dClient := grpc_device_manager_go.NewLatencyClient(dConn)
+	return &Clients{nClient, dnsClient, cClient, dClient}, nil
 }
 
 // Run the service, launch the REST service handler.
@@ -86,12 +94,16 @@ func (s *Service) Run() error {
 	networkManager := network.NewManager(clients.NetworkManager, clients.DNSClient)
 	networkHandler := network.NewHandler(networkManager)
 
+	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency)
+	deviceLatencyHandler := device_latency.NewHandler(deviceLatencyManager)
+
 	// Create handlers
 	grpcServer := grpc.NewServer(interceptor.WithServerAuthxInterceptor(
 		interceptor.NewConfig(authConfig, s.Configuration.AuthSecret, s.Configuration.AuthHeader)))
 
 	grpc_cluster_api_go.RegisterConductorServer(grpcServer, conductorHandler)
 	grpc_cluster_api_go.RegisterNetworkManagerServer(grpcServer, networkHandler)
+	grpc_cluster_api_go.RegisterDeviceManagerServer(grpcServer, deviceLatencyHandler)
 
 	// Register reflection service on gRPC server.
 	reflection.Register(grpcServer)

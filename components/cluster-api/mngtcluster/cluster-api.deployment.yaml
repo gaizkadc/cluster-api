@@ -46,6 +46,7 @@ spec:
         - "--debug"
         - "--networkManagerAddress=network-manager.__NPH_NAMESPACE:8000"
         - "--conductorAddress=conductor.__NPH_NAMESPACE:5000"
+        - "--deviceManagerAddress=device-manager..__NPH_NAMESPACE:6010"
         - "--authHeader=authorization"
         - "--authSecret=$(AUTH_SECRET)"
         - "--authConfigPath=/nalej/config/authx-config.json"

@@ -15,6 +15,7 @@ import (
 	"github.com/nalej/grpc-conductor-go"
 	"github.com/nalej/grpc-device-manager-go"
 	"github.com/nalej/grpc-network-go"
+	"github.com/nalej/grpc-authx-go"
 	"github.com/nalej/grpc-utils/pkg/tools"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
@@ -42,6 +43,7 @@ type Clients struct {
 	DNSClient      grpc_network_go.DNSClient
 	Conductor      grpc_conductor_go.ConductorMonitorClient
 	DeviceLatency  grpc_device_manager_go.LatencyClient
+	Authx grpc_authx_go.AuthxClient
 }
 
 // GetClients creates the required connections with the remote clients.
@@ -58,11 +60,16 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 	if err != nil {
 		return nil, derrors.AsError(err, "cannot create connection with device manager")
 	}
+	aConn, err := grpc.Dial(s.Configuration.AuthxAddress, grpc.WithInsecure())
+	if err != nil {
+		return nil, derrors.AsError(err, "cannot create connection with authx")
+	}
 	nClient := grpc_network_go.NewNetworksClient(nmConn)
 	dnsClient := grpc_network_go.NewDNSClient(nmConn)
 	cClient := grpc_conductor_go.NewConductorMonitorClient(cConn)
 	dClient := grpc_device_manager_go.NewLatencyClient(dConn)
-	return &Clients{nClient, dnsClient, cClient, dClient}, nil
+	aClient := grpc_authx_go.NewAuthxClient(aConn)
+	return &Clients{nClient, dnsClient, cClient, dClient, aClient}, nil
 }
 
 // Run the service, launch the REST service handler.
@@ -94,7 +101,7 @@ func (s *Service) Run() error {
 	networkManager := network.NewManager(clients.NetworkManager, clients.DNSClient)
 	networkHandler := network.NewHandler(networkManager)
 
-	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency)
+	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency, clients.Authx)
 	deviceLatencyHandler := device_latency.NewHandler(deviceLatencyManager)
 
 	// Create handlers

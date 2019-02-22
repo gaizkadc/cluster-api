@@ -50,6 +50,7 @@ spec:
         - "--authHeader=authorization"
         - "--authSecret=$(AUTH_SECRET)"
         - "--authConfigPath=/nalej/config/authx-config.json"
+        - "--authxAddress=authx.__NPH_NAMESPACE:8810"
         securityContext:
           runAsUser: 2000
       imagePullSecrets:

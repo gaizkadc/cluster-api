@@ -9,6 +9,7 @@ pipeline {
     agent { node { label 'k8s' } }
     parameters {
         string(name: "namespace", description: "Kubernetes namespace where it will be deployed", defaultValue: "nalej")
+        string(name: "sharedSecret", description: "Shared secret for cluster-api component", defaultValue: "this-is-my-little-secret")
     }
     options {
         checkoutToSubdirectory("${packagePath}")
@@ -18,6 +19,9 @@ pipeline {
     stages {
         stage("Render YAML files") {
             steps { container("kubectl") { stepRenderK8SYAMLFiles packagePath, yamlPath, appsList, params.namespace } }
+        }
+        stage("Create shared secret") {
+            steps { container("kubectl") { stepCreateK8SSecret packagePath, params.namespace, "authx-secret", [secret: params.sharedSecret] } }
         }
         stage("Create Kubernetes resources") {
             steps { container("kubectl") { stepCreateK8SResources yamlPath } }

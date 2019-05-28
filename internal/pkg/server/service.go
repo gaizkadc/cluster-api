@@ -17,6 +17,9 @@ import (
 	"github.com/nalej/grpc-network-go"
 	"github.com/nalej/grpc-authx-go"
 	"github.com/nalej/grpc-utils/pkg/tools"
+	"github.com/nalej/nalej-bus/pkg/bus"
+	"github.com/nalej/nalej-bus/pkg/bus/pulsar-comcast"
+	"github.com/nalej/nalej-bus/pkg/queue/network/ops"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -44,6 +47,7 @@ type Clients struct {
 	Conductor      grpc_conductor_go.ConductorMonitorClient
 	DeviceLatency  grpc_device_manager_go.LatencyClient
 	Authx grpc_authx_go.AuthxClient
+	QueueClient    bus.NalejClient
 }
 
 // GetClients creates the required connections with the remote clients.
@@ -64,12 +68,22 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 	if err != nil {
 		return nil, derrors.AsError(err, "cannot create connection with authx")
 	}
+
+	qClient := pulsar_comcast.NewClient(s.Configuration.QueueAddress)
+
+
 	nClient := grpc_network_go.NewNetworksClient(nmConn)
 	dnsClient := grpc_network_go.NewDNSClient(nmConn)
 	cClient := grpc_conductor_go.NewConductorMonitorClient(cConn)
 	dClient := grpc_device_manager_go.NewLatencyClient(dConn)
 	aClient := grpc_authx_go.NewAuthxClient(aConn)
-	return &Clients{nClient, dnsClient, cClient, dClient, aClient}, nil
+	return &Clients{
+		NetworkManager:nClient,
+		DNSClient:dnsClient,
+		Conductor: cClient,
+		DeviceLatency:dClient,
+		Authx: aClient,
+		QueueClient: qClient}, nil
 }
 
 // Run the service, launch the REST service handler.
@@ -98,7 +112,12 @@ func (s *Service) Run() error {
 	conductorManager := conductor.NewManager(clients.Conductor)
 	conductorHandler := conductor.NewHandler(conductorManager)
 
-	networkManager := network.NewManager(clients.NetworkManager, clients.DNSClient)
+	netOpsProducer, err := ops.NewNetworkOpsProducer(clients.QueueClient, "cluster-api-network-ops")
+	if err != nil {
+		log.Panic().Err(err).Msg("error instantiating network operations producer")
+	}
+
+	networkManager := network.NewManager(clients.NetworkManager, clients.DNSClient, netOpsProducer)
 	networkHandler := network.NewHandler(networkManager)
 
 	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency, clients.Authx)

@@ -29,6 +29,8 @@ type Config struct {
 	AuthHeader string
 	// AuthConfigPath contains the path of the file with the authentication configuration.
 	AuthConfigPath string
+	// QueueAddress contains the URL of the message service queue
+	QueueAddress string
 }
 
 func (conf *Config) Validate() derrors.Error {
@@ -61,6 +63,10 @@ func (conf *Config) Validate() derrors.Error {
 		return derrors.NewInvalidArgumentError("authConfigPath must be set")
 	}
 
+	if conf.QueueAddress == "" {
+		return derrors.NewInvalidArgumentError("queueAddress must be set")
+	}
+
 	return nil
 }
 
@@ -78,4 +84,5 @@ func (conf *Config) Print() {
 	log.Info().Str("URL", conf.AuthxAddress).Msg("Authx")
 	log.Info().Str("header", conf.AuthHeader).Str("secret", strings.Repeat("*", len(conf.AuthSecret))).Msg("Authorization")
 	log.Info().Str("path", conf.AuthConfigPath).Msg("Permissions file")
+	log.Info().Str("queueAddress", conf.QueueAddress).Msg("Queue address")
 }

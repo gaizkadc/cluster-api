@@ -36,5 +36,6 @@ func init() {
 	runCmd.PersistentFlags().StringVar(&config.DeviceManagerAddress, "deviceManagerAddress", "", "localhost:6010")
 	runCmd.PersistentFlags().StringVar(&config.AuthxAddress, "authxAddress", "localhost:8810",
 		"Authx address (host:port)")
+	runCmd.PersistentFlags().StringVar(&config.QueueAddress, "queueAddress", "localhost:6650", "localhost:6650")
 	rootCmd.AddCommand(runCmd)
 }

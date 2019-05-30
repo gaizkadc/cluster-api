@@ -82,6 +82,11 @@ jobs:
     parameters:
       kubeconfig: $(kubeconfig)
       namespace: $(namespace)
+  
+  - template: k8s/logs/archive.yaml@ci_templates
+    parameters:
+      kubeconfig: $(kubeconfig)
+      namespace: $(namespace)
 
   - template: k8s/ns/delete.yaml@ci_templates
     parameters:
@@ -90,7 +95,7 @@ jobs:
 
   - template: k8s/yaml/render.yaml@ci_templates
     parameters:
-      namespace: $(namespace)
+      namespace: nalej
       componentList: $(componentList)
       dockerRegistry: $(stagingDockerRegistry)
   
@@ -101,7 +106,7 @@ jobs:
 
   - template: k8s/yaml/render.yaml@ci_templates
     parameters:
-      namespace: $(namespace)
+      namespace: nalej
       componentList: $(componentList)
       dockerRegistry: $(productionDockerRegistry)
   

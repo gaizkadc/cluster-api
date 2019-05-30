@@ -95,7 +95,7 @@ jobs:
 
   - template: k8s/yaml/render.yaml@ci_templates
     parameters:
-      namespace: $(namespace)
+      namespace: nalej
       componentList: $(componentList)
       dockerRegistry: $(stagingDockerRegistry)
   
@@ -106,7 +106,7 @@ jobs:
 
   - template: k8s/yaml/render.yaml@ci_templates
     parameters:
-      namespace: $(namespace)
+      namespace: nalej
       componentList: $(componentList)
       dockerRegistry: $(productionDockerRegistry)
   

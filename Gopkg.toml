@@ -32,7 +32,7 @@
 
 [[constraint]]
     name="github.com/nalej/grpc-authx-go"
-    version="=v0.0.42"
+    version="=v0.0.50"
 
 [[constraint]]
     name="github.com/nalej/grpc-cluster-api-go"
@@ -44,7 +44,7 @@
 
 [[constraint]]
     name="github.com/nalej/grpc-network-go"
-    version="=v0.0.34"
+    version="=v0.0.38"
 
 [[constraint]]
     name="github.com/nalej/grpc-common-go"
@@ -52,8 +52,8 @@
 
 [[constraint]]
     name="github.com/nalej/grpc-device-manager-go"
-    version="=v0.0.7"
+    version="=v0.0.9"
 
 [[constraint]]
     name="github.com/nalej/authx"
-    version="=v0.2.0"
+    version="v0.2.0"

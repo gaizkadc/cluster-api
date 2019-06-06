@@ -13,7 +13,7 @@ import (
 )
 
 // Timeout to send packages to the network operations queue
-const NetworkOpsTimeout = time.Second * 10
+const NetworkOpsTimeout = time.Second * 5
 
 // Manager structure with the required clients for network operations.
 type Manager struct {
@@ -41,5 +41,12 @@ func (m *Manager) AuthorizeMember(request *grpc_network_go.AuthorizeMemberReques
 
 // AddDNSEntry creates a new DNSEntry on the system.
 func (m *Manager) AddDNSEntry(addRequest *grpc_network_go.AddDNSEntryRequest) (*grpc_common_go.Success, error) {
-	return m.DNSClient.AddDNSEntry(context.Background(), addRequest)
+	// send an asynchronous message and return success if no error is detected
+	ctx, cancel := context.WithTimeout(context.Background(), NetworkOpsTimeout)
+	defer cancel()
+	err := m.NetworkOpsProducer.Send(ctx, addRequest)
+	if err != nil {
+		return nil, err
+	}
+	return &grpc_common_go.Success{}, nil
 }

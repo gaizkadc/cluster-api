@@ -20,10 +20,6 @@ resources:
       type: github
       name: nalej/ci-templates
       endpoint: nalej
-    - repository: authx
-      type: github
-      name: nalej/authx
-      endpoint: nalej
 
 jobs:
 - job: DeployComponent
@@ -53,10 +49,6 @@ jobs:
       yamlIdentifier: testing
       yamlPath: dist/yaml/$(stagingDockerRegistry)
 
-  - template: ci/templates/download_artifact.yaml@authx
-    parameters:
-      downloadPath: $(system.defaultWorkingDirectory)/dist/yaml/$(stagingDockerRegistry)
-  
   - template: k8s/yaml/namespace.yaml@ci_templates
     parameters:
       namespace: $(namespace)

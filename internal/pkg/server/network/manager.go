@@ -40,11 +40,31 @@ func (m *Manager) AuthorizeMember(request *grpc_network_go.AuthorizeMemberReques
 }
 
 // AddDNSEntry creates a new DNSEntry on the system.
-func (m *Manager) AddDNSEntry(addRequest *grpc_network_go.AddDNSEntryRequest) (*grpc_common_go.Success, error) {
+func (m *Manager) AddDNSEntry(request *grpc_network_go.AddDNSEntryRequest) (*grpc_common_go.Success, error) {
 	// send an asynchronous message and return success if no error is detected
 	ctx, cancel := context.WithTimeout(context.Background(), NetworkOpsTimeout)
 	defer cancel()
-	err := m.NetworkOpsProducer.Send(ctx, addRequest)
+	err := m.NetworkOpsProducer.Send(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	return &grpc_common_go.Success{}, nil
+}
+
+func (m *Manager) RegisterInboundServiceProxy(request *grpc_network_go.InboundServiceProxy) (*grpc_common_go.Success, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), NetworkOpsTimeout)
+	defer cancel()
+	err := m.NetworkOpsProducer.Send(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	return &grpc_common_go.Success{}, nil
+}
+
+func (m *Manager) RegisterOutboundProxy(request *grpc_network_go.OutboundService) (*grpc_common_go.Success, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), NetworkOpsTimeout)
+	defer cancel()
+	err := m.NetworkOpsProducer.Send(ctx, request)
 	if err != nil {
 		return nil, err
 	}

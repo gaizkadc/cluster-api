@@ -92,7 +92,7 @@ jobs:
       platform: mngtcluster
       dockerRegistry: $(stagingDockerRegistry)
 
-  - template: templates/verify_deploy.yaml@authx
+  - template: ci/templates/verify_deploy.yaml@authx
     parameters:
       kubeconfig: $(kubeconfig)
       namespace: $(namespace)

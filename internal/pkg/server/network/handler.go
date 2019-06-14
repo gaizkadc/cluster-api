@@ -6,6 +6,7 @@ package network
 
 import (
 	"context"
+	"github.com/nalej/derrors"
 	"github.com/nalej/grpc-common-go"
 	"github.com/nalej/grpc-network-go"
 	"github.com/rs/zerolog/log"
@@ -28,9 +29,10 @@ func (h *Handler) AuthorizeMember(ctx context.Context, request *grpc_network_go.
 }
 
 // AddDNSEntry creates a new DNSEntry on the system.
+// DEPRECATED. This function is no longer available in the cluster-api
 func (h *Handler) AddDNSEntry(ctx context.Context, addRequest *grpc_network_go.AddDNSEntryRequest) (*grpc_common_go.Success, error) {
-	log.Debug().Interface("request", addRequest).Msg("add DNS Entry")
-	return h.Manager.AddDNSEntry(addRequest)
+	return nil, derrors.NewUnimplementedError("AddDNSEntry operation is no loger available in the cluster-api")
+
 }
 
 // RegisterInboundServiceProxy operation to update rules based on new service proxy being created.

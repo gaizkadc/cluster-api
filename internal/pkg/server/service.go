@@ -11,12 +11,11 @@ import (
 	"github.com/nalej/cluster-api/internal/pkg/server/device_latency"
 	"github.com/nalej/cluster-api/internal/pkg/server/network"
 	"github.com/nalej/derrors"
+	"github.com/nalej/grpc-authx-go"
 	"github.com/nalej/grpc-cluster-api-go"
 	"github.com/nalej/grpc-conductor-go"
 	"github.com/nalej/grpc-device-manager-go"
 	"github.com/nalej/grpc-network-go"
-	"github.com/nalej/grpc-authx-go"
-	"github.com/nalej/grpc-utils/pkg/tools"
 	"github.com/nalej/nalej-bus/pkg/bus"
 	"github.com/nalej/nalej-bus/pkg/bus/pulsar-comcast"
 	"github.com/nalej/nalej-bus/pkg/queue/network/ops"
@@ -29,14 +28,12 @@ import (
 // Service structure with the configuration and the gRPC server.
 type Service struct {
 	Configuration Config
-	Server        *tools.GenericGRPCServer
 }
 
 // NewService creates a new system model service.
 func NewService(conf Config) *Service {
 	return &Service{
 		conf,
-		tools.NewGenericGRPCServer(uint32(conf.Port)),
 	}
 }
 

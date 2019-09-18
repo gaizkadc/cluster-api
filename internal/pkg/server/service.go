@@ -13,6 +13,7 @@ import (
 	"github.com/nalej/derrors"
 	"github.com/nalej/grpc-authx-go"
 	"github.com/nalej/grpc-cluster-api-go"
+	"github.com/nalej/grpc-cluster-watcher-go"
 	"github.com/nalej/grpc-conductor-go"
 	"github.com/nalej/grpc-device-manager-go"
 	"github.com/nalej/grpc-network-go"
@@ -45,6 +46,7 @@ type Clients struct {
 	DeviceLatency  grpc_device_manager_go.LatencyClient
 	Authx grpc_authx_go.AuthxClient
 	QueueClient    bus.NalejClient
+	ClusterWatcher grpc_cluster_watcher_go.ClusterWatcherMasterClient
 }
 
 // GetClients creates the required connections with the remote clients.
@@ -66,6 +68,11 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 		return nil, derrors.AsError(err, "cannot create connection with authx")
 	}
 
+	cwConn, err := grpc.Dial(s.Configuration.ClusterWatcherAddress, grpc.WithInsecure())
+	if err != nil {
+		return nil, derrors.AsError(err, "cannot create connection with cluster watcher")
+	}
+
 	qClient := pulsar_comcast.NewClient(s.Configuration.QueueAddress)
 
 
@@ -74,13 +81,16 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 	cClient := grpc_conductor_go.NewConductorMonitorClient(cConn)
 	dClient := grpc_device_manager_go.NewLatencyClient(dConn)
 	aClient := grpc_authx_go.NewAuthxClient(aConn)
+	cwClient := grpc_cluster_watcher_go.NewClusterWatcherMasterClient(cwConn)
 	return &Clients{
 		NetworkManager:nClient,
 		DNSClient:dnsClient,
 		Conductor: cClient,
 		DeviceLatency:dClient,
 		Authx: aClient,
-		QueueClient: qClient}, nil
+		QueueClient: qClient,
+		ClusterWatcher: cwClient,
+	}, nil
 }
 
 // Run the service, launch the REST service handler.
@@ -119,6 +129,8 @@ func (s *Service) Run() error {
 
 	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency, clients.Authx)
 	deviceLatencyHandler := device_latency.NewHandler(deviceLatencyManager)
+
+
 
 	// Create handlers
 	grpcServer := grpc.NewServer(interceptor.WithServerAuthxInterceptor(

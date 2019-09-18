@@ -23,6 +23,8 @@ type Config struct {
 	DeviceManagerAddress string
 	// AuthxAddress with the host:port to connect to the Authx manager.
 	AuthxAddress string
+	// ClusterWatcher with the host:port to connect to the cluster watcher.
+	ClusterWatcherAddress string
 	// AuthSecret contains the shared authx secret.
 	AuthSecret string
 	// AuthHeader contains the name of the target header.
@@ -67,6 +69,10 @@ func (conf *Config) Validate() derrors.Error {
 		return derrors.NewInvalidArgumentError("queueAddress must be set")
 	}
 
+	if conf.ClusterWatcherAddress == "" {
+		return derrors.NewInvalidArgumentError("clusterWatcherAddress must be set")
+	}
+
 	return nil
 }
 
@@ -85,4 +91,5 @@ func (conf *Config) Print() {
 	log.Info().Str("header", conf.AuthHeader).Str("secret", strings.Repeat("*", len(conf.AuthSecret))).Msg("Authorization")
 	log.Info().Str("path", conf.AuthConfigPath).Msg("Permissions file")
 	log.Info().Str("queueAddress", conf.QueueAddress).Msg("Queue address")
+	log.Info().Str("clusterWatcherAddress", conf.ClusterWatcherAddress).Msg("Cluster watcher address")
 }

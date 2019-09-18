@@ -140,12 +140,20 @@
   version = "v0.0.16"
 
 [[projects]]
-  digest = "1:e90adad8d09f30d4ae185d06c6a2b11be4c15739a8038738344276bbf9a023d3"
+  digest = "1:e1f1a3e2ba70453678c93a2d9131a17f5b6410fda42b87a7716066b654db4ee3"
   name = "github.com/nalej/grpc-cluster-api-go"
   packages = ["."]
   pruneopts = ""
-  revision = "47baffca04a4a57e84fe7a3a9dc6a1af408b1e4a"
-  version = "v0.0.21"
+  revision = "44dae4f0098f8fcf9aad073780a5aa45fb1b1049"
+  version = "v0.0.23"
+
+[[projects]]
+  digest = "1:1ed874bfd5103d0fe53e49e1f4464d377cf5cac051ae7e43b3c3e69888f499ef"
+  name = "github.com/nalej/grpc-cluster-watcher-go"
+  packages = ["."]
+  pruneopts = ""
+  revision = "cc605d606b1ff550d0abb037317da15292d655af"
+  version = "v0.0.3"
 
 [[projects]]
   digest = "1:44f7426538411ea9f774f96e3b102decc9f549b188e55e29ecc15be69542a96b"
@@ -503,6 +511,7 @@
     "github.com/nalej/derrors",
     "github.com/nalej/grpc-authx-go",
     "github.com/nalej/grpc-cluster-api-go",
+    "github.com/nalej/grpc-cluster-watcher-go",
     "github.com/nalej/grpc-common-go",
     "github.com/nalej/grpc-conductor-go",
     "github.com/nalej/grpc-device-controller-go",

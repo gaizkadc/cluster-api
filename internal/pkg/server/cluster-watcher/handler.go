@@ -2,7 +2,7 @@
  * Copyright (C) 2019 Nalej - All Rights Reserved
  */
 
-package network
+package cluster_watcher
 
 import (
 	"context"

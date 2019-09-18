@@ -9,6 +9,7 @@ import (
 	"github.com/nalej/authx/pkg/interceptor"
 	"github.com/nalej/cluster-api/internal/pkg/server/conductor"
 	"github.com/nalej/cluster-api/internal/pkg/server/device_latency"
+	"github.com/nalej/cluster-api/internal/pkg/server/cluster-watcher"
 	"github.com/nalej/cluster-api/internal/pkg/server/network"
 	"github.com/nalej/derrors"
 	"github.com/nalej/grpc-authx-go"
@@ -82,6 +83,7 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 	dClient := grpc_device_manager_go.NewLatencyClient(dConn)
 	aClient := grpc_authx_go.NewAuthxClient(aConn)
 	cwClient := grpc_cluster_watcher_go.NewClusterWatcherMasterClient(cwConn)
+
 	return &Clients{
 		NetworkManager:nClient,
 		DNSClient:dnsClient,
@@ -130,7 +132,8 @@ func (s *Service) Run() error {
 	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency, clients.Authx)
 	deviceLatencyHandler := device_latency.NewHandler(deviceLatencyManager)
 
-
+	clusterWatcherManager := cluster_watcher.NewManager(clients.ClusterWatcher)
+	clusterWatcherHandler := cluster_watcher.NewHandler(clusterWatcherManager)
 
 	// Create handlers
 	grpcServer := grpc.NewServer(interceptor.WithServerAuthxInterceptor(
@@ -139,6 +142,7 @@ func (s *Service) Run() error {
 	grpc_cluster_api_go.RegisterConductorServer(grpcServer, conductorHandler)
 	grpc_cluster_api_go.RegisterNetworkManagerServer(grpcServer, networkHandler)
 	grpc_cluster_api_go.RegisterDeviceManagerServer(grpcServer, deviceLatencyHandler)
+	grpc_cluster_watcher_go.RegisterClusterWatcherMasterServer(grpcServer, clusterWatcherHandler)
 
 	// Register reflection service on gRPC server.
 	reflection.Register(grpcServer)

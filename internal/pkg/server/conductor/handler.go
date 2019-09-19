@@ -32,3 +32,4 @@ func (h *Handler) UpdateServiceStatus(ctx context.Context, updateRequest *grpc_c
 	log.Debug().Interface("request", updateRequest).Msg("update service status")
 	return h.Manager.UpdateServiceStatus(updateRequest)
 }
+

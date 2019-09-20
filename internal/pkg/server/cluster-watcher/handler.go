@@ -22,7 +22,7 @@ func NewHandler(manager Manager) *Handler {
 }
 
 // Add this cluster info
-func (h *Handler) AddClusterInfo(ctx context.Context, request *grpc_cluster_watcher_go.ClusterWatcherInfo) (*grpc_common_go.Success, error) {
+func (h *Handler) AddClusterInfo(ctx context.Context, request *grpc_cluster_watcher_go.ClusterWatchInfo) (*grpc_common_go.Success, error) {
 	log.Debug().Interface("request", request).Msg("add cluster infor")
 	return h.Manager.AddClusterInfo(request)
 }

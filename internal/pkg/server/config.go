@@ -31,6 +31,8 @@ type Config struct {
 	AuthConfigPath string
 	// QueueAddress contains the URL of the message service queue
 	QueueAddress string
+	// ConnectivityChecker address
+	ConnectivityCheckerAddress string
 }
 
 func (conf *Config) Validate() derrors.Error {
@@ -67,6 +69,10 @@ func (conf *Config) Validate() derrors.Error {
 		return derrors.NewInvalidArgumentError("queueAddress must be set")
 	}
 
+	if conf.ConnectivityCheckerAddress == "" {
+		return derrors.NewInvalidArgumentError("connectivityCheckerAddress must be set")
+	}
+
 	return nil
 }
 
@@ -85,4 +91,5 @@ func (conf *Config) Print() {
 	log.Info().Str("header", conf.AuthHeader).Str("secret", strings.Repeat("*", len(conf.AuthSecret))).Msg("Authorization")
 	log.Info().Str("path", conf.AuthConfigPath).Msg("Permissions file")
 	log.Info().Str("queueAddress", conf.QueueAddress).Msg("Queue address")
+	log.Info().Str("connectivityCheckerAddress", conf.ConnectivityCheckerAddress).Msg("Connectivity Checker Address")
 }

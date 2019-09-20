@@ -23,6 +23,6 @@ func NewHandler(manager Manager) *Handler {
 
 // Add this cluster info
 func (h *Handler) AddClusterInfo(ctx context.Context, request *grpc_cluster_watcher_go.ClusterWatchInfo) (*grpc_common_go.Success, error) {
-	log.Debug().Interface("request", request).Msg("add cluster infor")
+	log.Debug().Interface("request", request).Msg("add cluster information")
 	return h.Manager.AddClusterInfo(request)
 }

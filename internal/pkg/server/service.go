@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/nalej/authx/pkg/interceptor"
 	"github.com/nalej/cluster-api/internal/pkg/server/conductor"
+	"github.com/nalej/cluster-api/internal/pkg/server/connectivity-checker"
 	"github.com/nalej/cluster-api/internal/pkg/server/device_latency"
 	"github.com/nalej/cluster-api/internal/pkg/server/network"
 	"github.com/nalej/derrors"
@@ -74,13 +75,15 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 	cClient := grpc_conductor_go.NewConductorMonitorClient(cConn)
 	dClient := grpc_device_manager_go.NewLatencyClient(dConn)
 	aClient := grpc_authx_go.NewAuthxClient(aConn)
+
 	return &Clients{
 		NetworkManager:nClient,
 		DNSClient:dnsClient,
 		Conductor: cClient,
 		DeviceLatency:dClient,
 		Authx: aClient,
-		QueueClient: qClient}, nil
+		QueueClient: qClient,
+		}, nil
 }
 
 // Run the service, launch the REST service handler.
@@ -120,6 +123,9 @@ func (s *Service) Run() error {
 	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency, clients.Authx)
 	deviceLatencyHandler := device_latency.NewHandler(deviceLatencyManager)
 
+	connectivityCheckerManager := connectivity_checker.NewManager()
+	connectivityCheckerHandler := connectivity_checker.NewHandler(connectivityCheckerManager)
+
 	// Create handlers
 	grpcServer := grpc.NewServer(interceptor.WithServerAuthxInterceptor(
 		interceptor.NewConfig(authConfig, s.Configuration.AuthSecret, s.Configuration.AuthHeader)))
@@ -127,6 +133,7 @@ func (s *Service) Run() error {
 	grpc_cluster_api_go.RegisterConductorServer(grpcServer, conductorHandler)
 	grpc_cluster_api_go.RegisterNetworkManagerServer(grpcServer, networkHandler)
 	grpc_cluster_api_go.RegisterDeviceManagerServer(grpcServer, deviceLatencyHandler)
+	grpc_cluster_api_go.RegisterConnectivityCheckerServer(grpcServer, connectivityCheckerHandler)
 
 	// Register reflection service on gRPC server.
 	reflection.Register(grpcServer)

@@ -140,12 +140,12 @@
   version = "v0.0.16"
 
 [[projects]]
-  digest = "1:e90adad8d09f30d4ae185d06c6a2b11be4c15739a8038738344276bbf9a023d3"
+  digest = "1:7ac3b52b49a158e5caa95ab5fd9fce275fdef9f1f19ad0954d7ac051586c1d1c"
   name = "github.com/nalej/grpc-cluster-api-go"
   packages = ["."]
   pruneopts = ""
-  revision = "47baffca04a4a57e84fe7a3a9dc6a1af408b1e4a"
-  version = "v0.0.21"
+  revision = "da7ec3bded3982f694a636b26b2f5afd5c062d76"
+  version = "v0.0.22"
 
 [[projects]]
   digest = "1:44f7426538411ea9f774f96e3b102decc9f549b188e55e29ecc15be69542a96b"
@@ -508,7 +508,9 @@
     "github.com/nalej/grpc-device-controller-go",
     "github.com/nalej/grpc-device-go",
     "github.com/nalej/grpc-device-manager-go",
+    "github.com/nalej/grpc-infrastructure-go",
     "github.com/nalej/grpc-network-go",
+    "github.com/nalej/grpc-utils/pkg/conversions",
     "github.com/nalej/grpc-utils/pkg/test",
     "github.com/nalej/nalej-bus/pkg/bus",
     "github.com/nalej/nalej-bus/pkg/bus/pulsar-comcast",

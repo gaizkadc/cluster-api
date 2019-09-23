@@ -32,7 +32,7 @@
 
 [[constraint]]
     name="github.com/nalej/grpc-cluster-api-go"
-    version="=v0.0.21"
+    version="=v0.0.22"
 
 [[constraint]]
     name="github.com/nalej/grpc-conductor-go"

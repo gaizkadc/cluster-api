@@ -10,7 +10,6 @@ import (
 
 // Manager structure with the required clients for connectivity-checker operations.
 type Manager struct {
-	ConnectivityCheckerClient grpc_cluster_api_go.ConnectivityCheckerClient
 }
 
 // NewManager creates a Manager using a set of clients.

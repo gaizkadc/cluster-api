@@ -14,8 +14,8 @@ type Manager struct {
 }
 
 // NewManager creates a Manager using a set of clients.
-func NewManager(ConnectivityCheckerClient grpc_cluster_api_go.ConnectivityCheckerClient) Manager {
-	return Manager{ConnectivityCheckerClient: ConnectivityCheckerClient}
+func NewManager() Manager {
+	return Manager{}
 }
 
 func (m *Manager) ClusterAlive (ctx context.Context, clusterId *grpc_infrastructure_go.ClusterId) (*grpc_common_go.Success, derrors.Error) {

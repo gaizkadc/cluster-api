@@ -46,7 +46,6 @@ type Clients struct {
 	DeviceLatency  grpc_device_manager_go.LatencyClient
 	Authx grpc_authx_go.AuthxClient
 	QueueClient    bus.NalejClient
-	ConnectivityCheckerClient grpc_cluster_api_go.ConnectivityCheckerClient
 }
 
 // GetClients creates the required connections with the remote clients.
@@ -67,10 +66,6 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 	if err != nil {
 		return nil, derrors.AsError(err, "cannot create connection with authx")
 	}
-	ccConn, err := grpc.Dial(s.Configuration.ConnectivityCheckerAddress, grpc.WithInsecure())
-	if err != nil {
-		return nil, derrors.AsError(err, "cannot create connection with connectivity-checker")
-	}
 
 	qClient := pulsar_comcast.NewClient(s.Configuration.QueueAddress)
 
@@ -80,7 +75,6 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 	cClient := grpc_conductor_go.NewConductorMonitorClient(cConn)
 	dClient := grpc_device_manager_go.NewLatencyClient(dConn)
 	aClient := grpc_authx_go.NewAuthxClient(aConn)
-	ccClient := grpc_cluster_api_go.NewConnectivityCheckerClient(ccConn)
 
 	return &Clients{
 		NetworkManager:nClient,
@@ -89,8 +83,7 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 		DeviceLatency:dClient,
 		Authx: aClient,
 		QueueClient: qClient,
-		ConnectivityCheckerClient: ccClient,},
-		nil
+		}, nil
 }
 
 // Run the service, launch the REST service handler.
@@ -130,7 +123,7 @@ func (s *Service) Run() error {
 	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency, clients.Authx)
 	deviceLatencyHandler := device_latency.NewHandler(deviceLatencyManager)
 
-	connectivityCheckerManager := connectivity_checker.NewManager(clients.ConnectivityCheckerClient)
+	connectivityCheckerManager := connectivity_checker.NewManager()
 	connectivityCheckerHandler := connectivity_checker.NewHandler(connectivityCheckerManager)
 
 	// Create handlers

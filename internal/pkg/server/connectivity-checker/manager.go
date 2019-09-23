@@ -3,7 +3,6 @@ package connectivity_checker
 import (
 	"context"
 	"github.com/nalej/derrors"
-	"github.com/nalej/grpc-cluster-api-go"
 	"github.com/nalej/grpc-common-go"
 	"github.com/nalej/grpc-infrastructure-go"
 )

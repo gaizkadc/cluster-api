@@ -19,11 +19,17 @@ import (
 	"github.com/nalej/grpc-network-go"
 	"github.com/nalej/nalej-bus/pkg/bus"
 	"github.com/nalej/nalej-bus/pkg/bus/pulsar-comcast"
+	"github.com/nalej/nalej-bus/pkg/queue/infrastructure/events"
 	"github.com/nalej/nalej-bus/pkg/queue/network/ops"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"net"
+)
+
+const (
+	ClusterAPIInfraEventsProducerName = "cluster-api-infrastructure-events"
+	ClusterAPINetworkOpsProducerName = "cluster-api-network-ops"
 )
 
 // Service structure with the configuration and the gRPC server.
@@ -48,6 +54,31 @@ type Clients struct {
 	QueueClient    bus.NalejClient
 }
 
+type BusClients struct {
+	NetworkOpsProducer *ops.NetworkOpsProducer
+	InfrastructureEventsProducer *events.InfrastructureEventsProducer
+}
+
+// GetBusClients creates the required connections with the bus
+func (s*Service) GetBusClients() (*BusClients, derrors.Error) {
+	queueClient := pulsar_comcast.NewClient(s.Configuration.QueueAddress, nil)
+
+	netOpsProducer, err := ops.NewNetworkOpsProducer(queueClient, ClusterAPINetworkOpsProducerName)
+	if err != nil {
+		return nil, err
+	}
+
+	infraEvProducer, err := events.NewInfrastructureEventsProducer(queueClient, ClusterAPIInfraEventsProducerName)
+	if err != nil {
+		return nil, err
+	}
+
+	return &BusClients{
+		NetworkOpsProducer: netOpsProducer,
+		InfrastructureEventsProducer: infraEvProducer,
+	}, nil
+}
+
 // GetClients creates the required connections with the remote clients.
 func (s *Service) GetClients() (*Clients, derrors.Error) {
 	nmConn, err := grpc.Dial(s.Configuration.NetworkManagerAddress, grpc.WithInsecure())
@@ -67,9 +98,7 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 		return nil, derrors.AsError(err, "cannot create connection with authx")
 	}
 
-	qClient := pulsar_comcast.NewClient(s.Configuration.QueueAddress)
-
-
+	qClient := pulsar_comcast.NewClient(s.Configuration.QueueAddress, nil)
 	nClient := grpc_network_go.NewNetworksClient(nmConn)
 	dnsClient := grpc_network_go.NewDNSClient(nmConn)
 	cClient := grpc_conductor_go.NewConductorMonitorClient(cConn)
@@ -112,18 +141,19 @@ func (s *Service) Run() error {
 	conductorManager := conductor.NewManager(clients.Conductor)
 	conductorHandler := conductor.NewHandler(conductorManager)
 
-	netOpsProducer, err := ops.NewNetworkOpsProducer(clients.QueueClient, "cluster-api-network-ops")
-	if err != nil {
-		log.Panic().Err(err).Msg("error instantiating network operations producer")
+	// BusClients
+	busClients, bErr := s.GetBusClients()
+	if err != nil{
+		log.Fatal().Str("err", bErr.DebugReport()).Msg("Cannot create bus clients")
 	}
 
-	networkManager := network.NewManager(clients.NetworkManager, clients.DNSClient, netOpsProducer)
+	networkManager := network.NewManager(clients.NetworkManager, clients.DNSClient, busClients.NetworkOpsProducer)
 	networkHandler := network.NewHandler(networkManager)
 
 	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency, clients.Authx)
 	deviceLatencyHandler := device_latency.NewHandler(deviceLatencyManager)
 
-	connectivityCheckerManager := connectivity_checker.NewManager()
+	connectivityCheckerManager := connectivity_checker.NewManager(busClients.InfrastructureEventsProducer)
 	connectivityCheckerHandler := connectivity_checker.NewHandler(connectivityCheckerManager)
 
 	// Create handlers

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Nalej - All Rights Reserved
+ * Copyright (C) 2019 Nalej - All Rights Reserved
  */
 
 package queue
@@ -12,18 +12,11 @@ import (
     "github.com/nalej/nalej-bus/pkg/queue/network/ops"
 )
 
-// Structures and operations designed to manipulate the networks operation queue.
-
+// Structures and operations designed to manipulate the infrastructure events queue.
 type NetworkOpsBusManager struct {
     producer *ops.NetworkOpsProducer
 }
 
-// Create a new manager for the network ops topic.
-// params:
-//  client the implementation of que queueing protocol
-//  name of the producer to be generated
-// return:
-//  instance and error if any
 func NewNetworkOpsBusManager(client bus.NalejClient, name string) (*NetworkOpsBusManager, derrors.Error) {
     producer, err := ops.NewNetworkOpsProducer(client, name)
     if err != nil {

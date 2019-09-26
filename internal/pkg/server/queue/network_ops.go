@@ -17,6 +17,12 @@ type NetworkOpsBusManager struct {
     producer *ops.NetworkOpsProducer
 }
 
+// Create a new manager for the network ops topic.
+// params:
+//  client the implementation of que queueing protocol
+//  name of the producer to be generated
+// return:
+//  instance and error if any
 func NewNetworkOpsBusManager(client bus.NalejClient, name string) (*NetworkOpsBusManager, derrors.Error) {
     producer, err := ops.NewNetworkOpsProducer(client, name)
     if err != nil {

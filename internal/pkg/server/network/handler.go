@@ -44,3 +44,15 @@ func (h *Handler) RegisterInboundServiceProxy(ctx context.Context, request *grpc
 func (h *Handler) RegisterOutboundProxy(ctx context.Context, request *grpc_network_go.OutboundService) (*grpc_common_go.Success, error) {
 	return h.Manager.RegisterOutboundProxy(request)
 }
+
+// AuthorizeZTConnection A pod requests authorization to join a secondary ZT Network
+func (h *Handler) AuthorizeZTConnection(ctx context.Context, request *grpc_network_go.AuthorizeZTConnectionRequest) (*grpc_common_go.Success, error){
+	log.Debug().Interface("request", request).Msg("authorize zt connection")
+	return h.Manager.AuthorizeZTConnection(request)
+}
+
+// RegisterZTConnection operation to indicate that the inbound or outbound  are within the ztNetwork
+func (h *Handler) RegisterZTConnection(ctx context.Context, request *grpc_network_go.RegisterZTConnectionRequest) (*grpc_common_go.Success, error){
+	log.Debug().Interface("request", request).Msg("register zt connection")
+	return h.Manager.RegisterZTConnection(request)
+}

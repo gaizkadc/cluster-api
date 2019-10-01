@@ -24,7 +24,9 @@
 
 [[constraint]]
     name="github.com/nalej/nalej-bus"
-    version="=v0.4.0"
+    # master branch is needed until v.0.5.0 was tagged.
+    # V.0.4.0 has been changed and cluster_api needs to get this changes
+    branch="master"
 
 [[constraint]]
     name="github.com/nalej/grpc-authx-go"
@@ -32,15 +34,15 @@
 
 [[constraint]]
     name="github.com/nalej/grpc-cluster-api-go"
-    version="=v0.0.22"
+    version="=v0.0.24"
 
 [[constraint]]
     name="github.com/nalej/grpc-conductor-go"
-    version="=v0.0.91"
+    version="=v0.0.92"
 
 [[constraint]]
     name="github.com/nalej/grpc-network-go"
-    version="=v0.0.43"
+    version="=v0.0.44"
 
 [[constraint]]
     name="github.com/nalej/grpc-common-go"
@@ -56,4 +58,4 @@
 
 [[constraint]]
     name="github.com/nalej/grpc-bus-go"
-    version="=v0.0.19"
+    version="=v0.0.20"

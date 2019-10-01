@@ -142,7 +142,7 @@ func (s *Service) Run() error {
 	grpc_cluster_api_go.RegisterConductorServer(grpcServer, conductorHandler)
 	grpc_cluster_api_go.RegisterNetworkManagerServer(grpcServer, networkHandler)
 	grpc_cluster_api_go.RegisterDeviceManagerServer(grpcServer, deviceLatencyHandler)
-	grpc_cluster_watcher_go.RegisterClusterWatcherMasterServer(grpcServer, clusterWatcherHandler)
+	grpc_cluster_api_go.RegisterClusterWatcherMasterServer(grpcServer, clusterWatcherHandler)
 
 	// Register reflection service on gRPC server.
 	reflection.Register(grpcServer)

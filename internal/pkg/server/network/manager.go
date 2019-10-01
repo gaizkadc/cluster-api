@@ -70,3 +70,23 @@ func (m *Manager) RegisterOutboundProxy(request *grpc_network_go.OutboundService
 	}
 	return &grpc_common_go.Success{}, nil
 }
+
+func (m *Manager) AuthorizeZTConnection(request *grpc_network_go.AuthorizeZTConnectionRequest) (*grpc_common_go.Success, error){
+	ctx, cancel := context.WithTimeout(context.Background(), NetworkOpsTimeout)
+	defer cancel()
+	err := m.NetworkOpsProducer.Send(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	return &grpc_common_go.Success{}, nil
+}
+
+func (m *Manager) RegisterZTConnection(request *grpc_network_go.RegisterZTConnectionRequest) (*grpc_common_go.Success, error){
+	ctx, cancel := context.WithTimeout(context.Background(), NetworkOpsTimeout)
+	defer cancel()
+	err := m.NetworkOpsProducer.Send(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	return &grpc_common_go.Success{}, nil
+}

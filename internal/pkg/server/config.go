@@ -33,6 +33,8 @@ type Config struct {
 	AuthConfigPath string
 	// QueueAddress contains the URL of the message service queue
 	QueueAddress string
+	// ConnectivityManager address
+	ConnectivityManagerAddress string
 }
 
 func (conf *Config) Validate() derrors.Error {
@@ -73,6 +75,11 @@ func (conf *Config) Validate() derrors.Error {
 		return derrors.NewInvalidArgumentError("clusterWatcherAddress must be set")
 	}
 
+	if conf.ConnectivityManagerAddress == "" {
+		return derrors.NewInvalidArgumentError("connectivityManagerAddress must be set")
+
+	}
+
 	return nil
 }
 
@@ -92,4 +99,6 @@ func (conf *Config) Print() {
 	log.Info().Str("path", conf.AuthConfigPath).Msg("Permissions file")
 	log.Info().Str("queueAddress", conf.QueueAddress).Msg("Queue address")
 	log.Info().Str("clusterWatcherAddress", conf.ClusterWatcherAddress).Msg("Cluster watcher address")
+	log.Info().Str("connectivityManagerAddress", conf.ConnectivityManagerAddress).Msg("Connectivity Manager Address")
+
 }

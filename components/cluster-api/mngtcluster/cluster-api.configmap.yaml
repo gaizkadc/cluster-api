@@ -18,6 +18,7 @@ data:
        "/cluster_api.NetworkManager/RegisterOutboundProxy":{"must":["APPCLUSTEROPS"]},
        "/cluster_api.DeviceManager/RegisterLatency":{"must":["APPCLUSTEROPS"]},
        "/cluster_api.DeviceManager/GetDeviceGroupSecret":{"must":["APPCLUSTEROPS"]},
-       "/cluster_api.ClusterWatcherMaster/AddClusterInfo":{"must":["APPCLUSTEROPS"]}
+       "/cluster_api.ClusterWatcherMaster/AddClusterInfo":{"must":["APPCLUSTEROPS"]},
+       "/cluster_api.ConnectivityChecker/ClusterAlive":{"must":["APPCLUSTEROPS"]}
      }
     }

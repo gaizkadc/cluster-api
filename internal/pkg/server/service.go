@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/nalej/authx/pkg/interceptor"
 	"github.com/nalej/cluster-api/internal/pkg/server/conductor"
+	"github.com/nalej/cluster-api/internal/pkg/server/connectivity-checker"
 	"github.com/nalej/cluster-api/internal/pkg/server/device_latency"
 	"github.com/nalej/cluster-api/internal/pkg/server/cluster-watcher"
 	"github.com/nalej/cluster-api/internal/pkg/server/network"
@@ -20,11 +21,17 @@ import (
 	"github.com/nalej/grpc-network-go"
 	"github.com/nalej/nalej-bus/pkg/bus"
 	"github.com/nalej/nalej-bus/pkg/bus/pulsar-comcast"
+	"github.com/nalej/nalej-bus/pkg/queue/infrastructure/events"
 	"github.com/nalej/nalej-bus/pkg/queue/network/ops"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"net"
+)
+
+const (
+	ClusterAPIInfraEventsProducerName = "cluster-api-infrastructure-events"
+	ClusterAPINetworkOpsProducerName = "cluster-api-network-ops"
 )
 
 // Service structure with the configuration and the gRPC server.
@@ -50,6 +57,31 @@ type Clients struct {
 	ClusterWatcher grpc_cluster_watcher_go.ClusterWatcherMasterClient
 }
 
+type BusClients struct {
+	NetworkOpsProducer *ops.NetworkOpsProducer
+	InfrastructureEventsProducer *events.InfrastructureEventsProducer
+}
+
+// GetBusClients creates the required connections with the bus
+func (s*Service) GetBusClients() (*BusClients, derrors.Error) {
+	queueClient := pulsar_comcast.NewClient(s.Configuration.QueueAddress, nil)
+
+	netOpsProducer, err := ops.NewNetworkOpsProducer(queueClient, ClusterAPINetworkOpsProducerName)
+	if err != nil {
+		return nil, err
+	}
+
+	infraEvProducer, err := events.NewInfrastructureEventsProducer(queueClient, ClusterAPIInfraEventsProducerName)
+	if err != nil {
+		return nil, err
+	}
+
+	return &BusClients{
+		NetworkOpsProducer: netOpsProducer,
+		InfrastructureEventsProducer: infraEvProducer,
+	}, nil
+}
+
 // GetClients creates the required connections with the remote clients.
 func (s *Service) GetClients() (*Clients, derrors.Error) {
 	nmConn, err := grpc.Dial(s.Configuration.NetworkManagerAddress, grpc.WithInsecure())
@@ -69,13 +101,14 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 		return nil, derrors.AsError(err, "cannot create connection with authx")
 	}
 
+
 	cwConn, err := grpc.Dial(s.Configuration.ClusterWatcherAddress, grpc.WithInsecure())
 	if err != nil {
 		return nil, derrors.AsError(err, "cannot create connection with cluster watcher")
 	}
 
-	qClient := pulsar_comcast.NewClient(s.Configuration.QueueAddress)
 
+	qClient := pulsar_comcast.NewClient(s.Configuration.QueueAddress, nil)
 
 	nClient := grpc_network_go.NewNetworksClient(nmConn)
 	dnsClient := grpc_network_go.NewDNSClient(nmConn)
@@ -83,6 +116,7 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 	dClient := grpc_device_manager_go.NewLatencyClient(dConn)
 	aClient := grpc_authx_go.NewAuthxClient(aConn)
 	cwClient := grpc_cluster_watcher_go.NewClusterWatcherMasterClient(cwConn)
+
 
 	return &Clients{
 		NetworkManager:nClient,
@@ -92,7 +126,7 @@ func (s *Service) GetClients() (*Clients, derrors.Error) {
 		Authx: aClient,
 		QueueClient: qClient,
 		ClusterWatcher: cwClient,
-	}, nil
+		}, nil
 }
 
 // Run the service, launch the REST service handler.
@@ -121,19 +155,24 @@ func (s *Service) Run() error {
 	conductorManager := conductor.NewManager(clients.Conductor)
 	conductorHandler := conductor.NewHandler(conductorManager)
 
-	netOpsProducer, err := ops.NewNetworkOpsProducer(clients.QueueClient, "cluster-api-network-ops")
-	if err != nil {
-		log.Panic().Err(err).Msg("error instantiating network operations producer")
+	// BusClients
+	busClients, bErr := s.GetBusClients()
+	if err != nil{
+		log.Fatal().Str("err", bErr.DebugReport()).Msg("Cannot create bus clients")
 	}
 
-	networkManager := network.NewManager(clients.NetworkManager, clients.DNSClient, netOpsProducer)
+	networkManager := network.NewManager(clients.NetworkManager, clients.DNSClient, busClients.NetworkOpsProducer)
 	networkHandler := network.NewHandler(networkManager)
 
 	deviceLatencyManager := device_latency.NewManager(clients.DeviceLatency, clients.Authx)
 	deviceLatencyHandler := device_latency.NewHandler(deviceLatencyManager)
 
+
 	clusterWatcherManager := cluster_watcher.NewManager(clients.ClusterWatcher)
 	clusterWatcherHandler := cluster_watcher.NewHandler(clusterWatcherManager)
+	connectivityCheckerManager := connectivity_checker.NewManager(busClients.InfrastructureEventsProducer)
+	connectivityCheckerHandler := connectivity_checker.NewHandler(connectivityCheckerManager)
+
 
 	// Create handlers
 	grpcServer := grpc.NewServer(interceptor.WithServerAuthxInterceptor(
@@ -143,6 +182,8 @@ func (s *Service) Run() error {
 	grpc_cluster_api_go.RegisterNetworkManagerServer(grpcServer, networkHandler)
 	grpc_cluster_api_go.RegisterDeviceManagerServer(grpcServer, deviceLatencyHandler)
 	grpc_cluster_api_go.RegisterClusterWatcherMasterServer(grpcServer, clusterWatcherHandler)
+	grpc_cluster_api_go.RegisterConnectivityCheckerServer(grpcServer, connectivityCheckerHandler)
+
 
 	// Register reflection service on gRPC server.
 	reflection.Register(grpcServer)

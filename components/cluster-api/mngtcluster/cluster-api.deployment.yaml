@@ -52,6 +52,7 @@ spec:
         - "--authConfigPath=/nalej/config/authx-config.json"
         - "--authxAddress=authx.__NPH_NAMESPACE:8810"
         - "--queueAddress=broker.__NPH_NAMESPACE:6650"
+        - "--clusterWatcherAddress=cluster-watcher.__NPH_NAMESPACE:7777"
         securityContext:
           runAsUser: 2000
       imagePullSecrets:

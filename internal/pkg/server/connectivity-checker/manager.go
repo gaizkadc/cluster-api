@@ -44,8 +44,8 @@ func (m *Manager) ClusterAlive (ctx context.Context, clusterId *grpc_infrastruct
 
 func clusterIdToClusterAlive (clusterId *grpc_infrastructure_go.ClusterId) *grpc_connectivity_manager_go.ClusterAlive {
 	return &grpc_connectivity_manager_go.ClusterAlive{
-		OrganizationId:       clusterId.ClusterId,
-		ClusterId:            clusterId.OrganizationId,
+		OrganizationId:       clusterId.OrganizationId,
+		ClusterId:            clusterId.ClusterId,
 		Timestamp:            time.Now().Unix(),
 	}
 }

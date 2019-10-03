@@ -37,6 +37,7 @@ func init() {
 	runCmd.PersistentFlags().StringVar(&config.AuthxAddress, "authxAddress", "localhost:8810",
 		"Authx address (host:port)")
 	runCmd.PersistentFlags().StringVar(&config.QueueAddress, "queueAddress", "localhost:6650", "localhost:6650")
+	runCmd.PersistentFlags().StringVar(&config.ClusterWatcherAddress, "clusterWatcherAddress", "localhost:7777", "localhost:7777")
 	runCmd.PersistentFlags().StringVar(&config.ConnectivityManagerAddress, "connectivityManagerAddress", "localhost:8384", "localhost:8384")
 	rootCmd.AddCommand(runCmd)
 }

@@ -16,6 +16,8 @@ data:
        "/cluster_api.NetworkManager/AuthorizeMember":{"must":["APPCLUSTEROPS"]},
        "/cluster_api.NetworkManager/RegisterInboundServiceProxy":{"must":["APPCLUSTEROPS"]},
        "/cluster_api.NetworkManager/RegisterOutboundProxy":{"must":["APPCLUSTEROPS"]},
+       "/cluster_api.NetworkManager/AuthorizeZTConnection":{"must":["APPCLUSTEROPS"]},
+       "/cluster_api.NetworkManager/RegisterZTConnection":{"must":["APPCLUSTEROPS"]},
        "/cluster_api.DeviceManager/RegisterLatency":{"must":["APPCLUSTEROPS"]},
        "/cluster_api.DeviceManager/GetDeviceGroupSecret":{"must":["APPCLUSTEROPS"]},
        "/cluster_api.ClusterWatcherMaster/AddClusterInfo":{"must":["APPCLUSTEROPS"]},

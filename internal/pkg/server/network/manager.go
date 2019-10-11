@@ -8,7 +8,9 @@ import (
 	"context"
 	"github.com/nalej/grpc-common-go"
 	"github.com/nalej/grpc-network-go"
+	"github.com/nalej/grpc-utils/pkg/conversions"
 	"github.com/nalej/nalej-bus/pkg/queue/network/ops"
+	"github.com/rs/zerolog/log"
 	"time"
 )
 
@@ -76,6 +78,7 @@ func (m *Manager) AuthorizeZTConnection(request *grpc_network_go.AuthorizeZTConn
 	defer cancel()
 	err := m.NetworkOpsProducer.Send(ctx, request)
 	if err != nil {
+		log.Debug().Str("trace", conversions.ToDerror(err).DebugReport()).Msg("ERROR AuthorizeZTConnection")
 		return nil, err
 	}
 	return &grpc_common_go.Success{}, nil

@@ -29,6 +29,11 @@
     branch="master"
 
 [[constraint]]
+    name="github.com/nalej/grpc-infrastructure-go"
+    version="=v0.0.47"
+
+
+[[constraint]]
     name="github.com/nalej/grpc-authx-go"
     version="=v0.0.50"
 
@@ -55,7 +60,7 @@
 
 [[constraint]]
     name="github.com/nalej/grpc-cluster-watcher-go"
-    version="=v0.0.6"
+    version="=v0.0.7"
 
 [[constraint]]
     name="github.com/nalej/authx"

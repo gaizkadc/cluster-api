@@ -162,12 +162,12 @@
   version = "v0.0.24"
 
 [[projects]]
-  digest = "1:951ccd675cdbd35b4a9b39c539e5a9041507cd5dcea5fc63342540ea8a72c2c6"
+  digest = "1:c96717a83498637ef49ea903eaa07c20a1dc9511043b06da8ac8099dffa58b68"
   name = "github.com/nalej/grpc-cluster-watcher-go"
   packages = ["."]
   pruneopts = ""
-  revision = "1540f520a26a7539db497978cfcf1a4283cb881e"
-  version = "v0.0.6"
+  revision = "dab36160f6c422effd58b50582485154d5eae6b6"
+  version = "v0.0.7"
 
 [[projects]]
   digest = "1:4d9aa384a7b493425344b4d2642ca890b21d09ddbf9f4b993038c8f1b82e642d"
@@ -218,12 +218,12 @@
   version = "v0.0.9"
 
 [[projects]]
-  digest = "1:e90c5a0c5e0037bde033aa289517430492933bbb8463d576155742a63f6cd91d"
+  digest = "1:77f1bad5ffae171bf3d5541ed55daa03e5c6de0270d3ed10a7afb594f6110c20"
   name = "github.com/nalej/grpc-infrastructure-go"
   packages = ["."]
   pruneopts = ""
-  revision = "77f31816c5de01dabec7dd4f9438bffddc9e3a93"
-  version = "v0.0.44"
+  revision = "42315cee8de61d8ea3e8fb5b1e31e5f7ecfd3988"
+  version = "v0.0.47"
 
 [[projects]]
   digest = "1:3ff7102c03393dd8f56c2f8e7cc5f469bb83b2aa4800b64e25fe440214309d4e"

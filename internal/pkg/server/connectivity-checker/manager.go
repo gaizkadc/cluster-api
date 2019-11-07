@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	DefaultTimeout =  time.Minute
+	DefaultTimeout = time.Minute
 )
 
 // Manager structure with the required clients for connectivity-checker operations.
@@ -43,7 +43,7 @@ func NewManager(infraEventsProducer *events.InfrastructureEventsProducer) Manage
 	}
 }
 
-func (m *Manager) ClusterAlive (ctx context.Context, clusterId *grpc_infrastructure_go.ClusterId) (*grpc_common_go.Success, derrors.Error) {
+func (m *Manager) ClusterAlive(ctx context.Context, clusterId *grpc_infrastructure_go.ClusterId) (*grpc_common_go.Success, derrors.Error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), DefaultTimeout)
 	defer cancel()
@@ -58,10 +58,10 @@ func (m *Manager) ClusterAlive (ctx context.Context, clusterId *grpc_infrastruct
 	return &grpc_common_go.Success{}, nil
 }
 
-func clusterIdToClusterAlive (clusterId *grpc_infrastructure_go.ClusterId) *grpc_connectivity_manager_go.ClusterAlive {
+func clusterIdToClusterAlive(clusterId *grpc_infrastructure_go.ClusterId) *grpc_connectivity_manager_go.ClusterAlive {
 	return &grpc_connectivity_manager_go.ClusterAlive{
-		OrganizationId:       clusterId.OrganizationId,
-		ClusterId:            clusterId.ClusterId,
-		Timestamp:            time.Now().Unix(),
+		OrganizationId: clusterId.OrganizationId,
+		ClusterId:      clusterId.ClusterId,
+		Timestamp:      time.Now().Unix(),
 	}
 }

@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	InfrastructureEventsTopic="nalej/infrastructure/events"
+	InfrastructureEventsTopic = "nalej/infrastructure/events"
 )
 
 type InfrastructureEventsProducer struct {

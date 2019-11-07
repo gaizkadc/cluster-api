@@ -18,8 +18,8 @@ package cluster_watcher
 
 import (
 	"context"
-	"github.com/nalej/grpc-common-go"
 	"github.com/nalej/grpc-cluster-watcher-go"
+	"github.com/nalej/grpc-common-go"
 	"github.com/rs/zerolog/log"
 )
 

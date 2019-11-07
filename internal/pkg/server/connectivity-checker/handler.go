@@ -47,7 +47,7 @@ func (h *Handler) ClusterAlive(ctx context.Context, clusterId *grpc_infrastructu
 	return clusterAliveResult, nil
 }
 
-func (h * Handler) ValidClusterId (clusterId *grpc_infrastructure_go.ClusterId) derrors.Error {
+func (h *Handler) ValidClusterId(clusterId *grpc_infrastructure_go.ClusterId) derrors.Error {
 	if clusterId.ClusterId == "" {
 		return derrors.NewInvalidArgumentError("expecting ClusterId")
 	}

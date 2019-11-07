@@ -22,8 +22,6 @@ import (
 	"github.com/nalej/grpc-common-go"
 )
 
-
-
 // Manager structure with the required clients for network operations.
 type Manager struct {
 	ClusterWatcherClient grpc_cluster_watcher_go.ClusterWatcherMasterClient

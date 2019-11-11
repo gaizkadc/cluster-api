@@ -8,7 +8,6 @@
     "cluster-api"
   ],
   "tools": [
-    "azure",
     "k8s",
     "docker"
   ]

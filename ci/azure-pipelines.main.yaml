@@ -95,7 +95,7 @@ stages:
         kubeconfig: $(kubeconfig)
         namespace: $(namespace)
 
-    - template: certificates/letsencrypt/ingress-tls.yaml@ci_templates
+    - template: certificates/letsencrypt/tls-ingress.yaml@ci_templates
       parameters:
         kubeconfig: $(kubeconfig)
         namespace: $(namespace)

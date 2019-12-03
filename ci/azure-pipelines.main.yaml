@@ -67,8 +67,6 @@ stages:
         environment: "staging"
         version: edge
 
-    - template: k8s/configmaps/cluster-config.yaml@ci_templates
-
     - template: k8s/yaml/namespace.yaml@ci_templates
       parameters:
         namespace: $(namespace)
@@ -81,11 +79,6 @@ stages:
       displayName: "Get K8S configuration file"
 
     - template: k8s/ns/create.yaml@ci_templates
-      parameters:
-        kubeconfig: $(kubeconfig)
-        namespace: $(namespace)
-
-    - template: certificates/letsencrypt/tls-client-certificate.yaml@ci_templates
       parameters:
         kubeconfig: $(kubeconfig)
         namespace: $(namespace)

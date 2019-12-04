@@ -8,6 +8,9 @@
   "image_list": [
     "cluster-api"
   ],
+  "component_list": [
+    "cluster-api"
+  ],
   "tools": [
     "k8s",
     "docker"
